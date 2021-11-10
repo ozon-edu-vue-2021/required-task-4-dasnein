@@ -9,6 +9,7 @@
       :placeholder="placeholder"
       :type="type"
       class="form-control"
+      :class="{ 'border-danger': invalid }"
       v-model="val"
     />
   </div>
@@ -19,6 +20,10 @@ export default {
   name: "Input",
 
   props: {
+    invalid: {
+      type: Boolean,
+      default: false,
+    },
     label: {
       type: String,
     },
