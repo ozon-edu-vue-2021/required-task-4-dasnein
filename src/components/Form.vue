@@ -1,104 +1,51 @@
 <template>
-  <form>
+  <form @submit.prevent="onSubmit">
     <h3 class="mb-4">Личные данные</h3>
     <div class="row mb-4">
       <div class="col-4">
-        <Input label="Фамилия" name="last_name" />
+        <Input v-model="lastName" label="Фамилия" name="last_name" />
       </div>
       <div class="col-4">
-        <Input label="Имя" name="first_name" />
+        <Input v-model="firstName" label="Имя" name="first_name" />
       </div>
       <div class="col-4">
-        <Input label="Отчество" name="patronymic" />
+        <Input v-model="patronymic" label="Отчество" name="patronymic" />
       </div>
     </div>
     <div class="row mb-4">
-      <div class="col-6">
+      <div class="col-5">
         <Input
           label="Дата рождения"
           name="birth_date"
           placeholder="дд.мм.гггг"
+          v-model="birthDate"
         />
       </div>
     </div>
     <div class="row mb-4">
       <div class="col-12">
-        <Input label="E-mail" name="email" />
+        <Input label="E-mail" name="email" type="email" />
       </div>
     </div>
-    <!--  -->
     <div class="row mb-4">
       <div class="col-12">
         <h5>Пол</h5>
       </div>
       <div class="col-12">
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="sex"
-            id="inlineRadio1"
-            value="man"
-          />
-          <label class="form-check-label" for="inlineRadio1">Мужской</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="sex"
-            id="inlineRadio2"
-            value="woman"
-          />
-          <label class="form-check-label" for="inlineRadio2">Женский</label>
-        </div>
+        <RadioButtons v-model="gender" name="gender" :options="gendersList" />
       </div>
     </div>
-    <!--  -->
     <h3 class="mb-4">Паспортные данные</h3>
     <div class="row mb-4">
-      <div class="col-12">
-        <label for="citizenship" class="form-label text-secondary"
-          >Гражданство</label
-        >
-      </div>
-      <div class="col-12">
-        <input id="citizenship" list="citizenship_list" />
-        <datalist id="citizenship_list">
-          <option value="Russia">Russia</option>
-          <option value="New Zealanders">New Zealanders</option>
-          <option value="Manx">Manx</option>
-          <option value="Guyanese">Guyanese</option>
-          <option value="Cameroonians">Cameroonians</option>
-          <option value="Bahamians">Bahamians</option>
-          <option value="Quebecers">Quebecers</option>
-          <option value="Ethiopians">Ethiopians</option>
-          <option value="Singaporeans">Singaporeans</option>
-          <option value="Australians">Australians</option>
-          <option value="Americans">Americans</option>
-          <option value="Lithuanians">Lithuanians</option>
-          <option value="Finns">Finns</option>
-          <option value="Ugandans">Ugandans</option>
-          <option value="Aromanians">Aromanians</option>
-          <option value="Swiss">Swiss</option>
-          <option value="Palauans">Palauans</option>
-          <option value="Quebecers">Quebecers</option>
-          <option value="Mauritians">Mauritians</option>
-          <option value="Albanians">Albanians</option>
-          <option value="Finnish">Finnish</option>
-          <option value="Mexicans">Mexicans</option>
-          <option value="Belgians">Belgians</option>
-          <option value="Latvians">Latvians</option>
-          <option value="Cubans">Cubans</option>
-          <option value="Macedonians">Macedonians</option>
-          <option value="Sudanese">Sudanese</option>
-          <option value="Bahamians">Bahamians</option>
-          <option value="Chadians">Chadians</option>
-          <option value="Ivoirians">Ivoirians</option>
-        </datalist>
-      </div>
+      <SelectDropdown
+        :options="citizenshipsList"
+        class="col-5"
+        label="Гражданство"
+        name="citizenship"
+        v-model="citizenship"
+      />
     </div>
-    <div class="row mb-4">
+    <div v-if="showFullPassportInfo" class="row mb-4">
       <div class="col-3">
         <Input label="Серия паспорта" name="passport_series" />
       </div>
@@ -106,15 +53,19 @@
         <Input label="Номер паспорта" name="passport_number" />
       </div>
       <div class="col-6">
-        <Input label="Дата выдачи" name="passport_date" />
+        <Input
+          label="Дата выдачи"
+          name="passport_date"
+          placeholder="дд.мм.гггг"
+        />
       </div>
     </div>
-    <div class="row mb-4">
+    <div v-else class="row mb-4">
       <div class="col-6">
-        <Input label="Фамилия на латинице" name="last_name" />
+        <Input label="Фамилия на латинице" name="last_name_latin" />
       </div>
       <div class="col-6">
-        <Input label="Имя на латинице" name="first_name" />
+        <Input label="Имя на латинице" name="first_name_latin" />
       </div>
       <div class="col-12">
         <p class="text-muted">
@@ -123,79 +74,136 @@
           </small>
         </p>
       </div>
-    </div>
-    <div class="row mb-4">
       <div class="col-3">
         <Input label="Номер паспорта" name="passport_number" />
       </div>
-      <div class="col-3">
+      <!-- <div class="col-3">
         <Input label="Страна выдачи" name="passport_country" />
-      </div>
-      <div class="col-6">
+      </div> -->
+      <SelectDropdown
+        :options="citizenshipsList"
+        class="col-3"
+        label="Страна выдачи"
+        name="passport_country"
+        v-model="passportCountry"
+      />
+      <!-- <div class="col-6">
         <Input label="Тип паспорта" name="passport_type" />
-      </div>
+      </div> -->
+      <SelectDropdown
+        :options="passportTypesList"
+        class="col-5"
+        label="Тип паспорта"
+        name="passport_type"
+        v-model="passportType"
+      />
     </div>
+
     <!--  -->
     <div class="row mb-4">
       <div class="col-12">
         <h5>Меняли ли фамилию или имя?</h5>
       </div>
-      <div class="col-12">
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="is_name_changed"
-            id="inlineRadio1"
-            value="0"
-          />
-          <label class="form-check-label" for="inlineRadio1">Нет</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="is_name_changed"
-            id="inlineRadio2"
-            value="1"
-          />
-          <label class="form-check-label" for="inlineRadio2">Да</label>
-        </div>
-      </div>
+      <RadioButtons
+        :options="baseChoicesList"
+        name="is_name_changed"
+        v-model="isNameChanged"
+      />
     </div>
-    <div class="row mb-5">
+    <div v-if="isNameChanged" class="row mb-5">
       <div class="col-6">
-        <Input label="Фамилия" name="last_name" />
+        <Input label="Предыдущая фамилия" name="last_name_old" />
       </div>
       <div class="col-6">
-        <Input label="Имя" name="first_name" />
+        <Input label="Предыдущее имя" name="first_name_old" />
       </div>
     </div>
     <div class="row justify-content-end">
       <div class="col-auto">
-        <button class="btn btn-primary" type="button" disabled>
-          <span
-            class="spinner-border spinner-border-sm"
-            role="status"
-            aria-hidden="true"
-          ></span>
-          Отправить
-        </button>
+        <ButtonSubmit />
       </div>
     </div>
   </form>
 </template>
 
 <script>
-import Input from "./inputs/Input.vue";
+import CITIZENSHIPS from "@/assets/data/citizenships.json";
+import GENDERS from "@/assets/data/genders.json";
+import PASSPORT_TYPES from "@/assets/data/passport-types.json";
+
+import ButtonSubmit from "./buttons/ButtonSubmit.vue";
+import Input from "./form_elements/Input.vue";
+import RadioButtons from "./form_elements/RadioButtons.vue";
+import SelectDropdown from "./form_elements/SelectDropdown.vue";
+
+const BASE_CHOICES = [
+  {
+    value: 0,
+    text: "нет",
+  },
+  {
+    value: 1,
+    text: "да",
+  },
+];
+
+const DEFAULT_CITIZENSHIP = CITIZENSHIPS[0]["nationality"];
+const DEFAULT_GENDER = GENDERS[0]["value"];
+const DEFAULT_IS_NAME_CHANGED = BASE_CHOICES[0]["value"];
+const DEFAULT_PASSPORT_TYPE = PASSPORT_TYPES[0]["type"];
+
+const COUNTRIES_WITH_SHORT_PASSPORT_INFO = ["Russia"];
 
 export default {
+  name: "Form",
+
   components: {
+    ButtonSubmit,
     Input,
+    RadioButtons,
+    SelectDropdown,
   },
+
   data() {
-    return {};
+    return {
+      citizenshipsList: CITIZENSHIPS.map(({ nationality }) => ({
+        text: nationality,
+        value: nationality,
+      })),
+      gendersList: GENDERS,
+      baseChoicesList: BASE_CHOICES,
+      passportTypesList: PASSPORT_TYPES.map(({ type }) => ({
+        text: type,
+        value: type,
+      })),
+
+      birthDate: "",
+      citizenship: DEFAULT_CITIZENSHIP,
+      firstName: "",
+      gender: DEFAULT_GENDER,
+      isNameChanged: DEFAULT_IS_NAME_CHANGED,
+      lastName: "",
+      passportCountry: DEFAULT_CITIZENSHIP,
+      passportType: DEFAULT_PASSPORT_TYPE,
+      patronymic: "",
+    };
   },
-  methods: {},
+
+  computed: {
+    showFullPassportInfo() {
+      return COUNTRIES_WITH_SHORT_PASSPORT_INFO.includes(this.citizenship);
+    },
+  },
+
+  methods: {
+    onSubmit(e) {
+      console.log("Submit event:");
+
+      const formData = new FormData(e.target);
+      const entries = [...formData.entries()].map((el) => el.join(": "));
+
+      console.log(entries.join("\n"));
+    },
+  },
 };
 </script>
