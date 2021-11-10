@@ -37,7 +37,7 @@
     </div>
     <h3 class="mb-4">Паспортные данные</h3>
     <div class="row mb-4">
-      <SelectDropdown
+      <SelectSearch
         :options="citizenshipsList"
         class="col-5"
         label="Гражданство"
@@ -77,9 +77,6 @@
       <div class="col-3">
         <Input label="Номер паспорта" name="passport_number" />
       </div>
-      <!-- <div class="col-3">
-        <Input label="Страна выдачи" name="passport_country" />
-      </div> -->
       <SelectDropdown
         :options="citizenshipsList"
         class="col-3"
@@ -87,9 +84,6 @@
         name="passport_country"
         v-model="passportCountry"
       />
-      <!-- <div class="col-6">
-        <Input label="Тип паспорта" name="passport_type" />
-      </div> -->
       <SelectDropdown
         :options="passportTypesList"
         class="col-5"
@@ -98,8 +92,6 @@
         v-model="passportType"
       />
     </div>
-
-    <!--  -->
     <div class="row mb-4">
       <div class="col-12">
         <h5>Меняли ли фамилию или имя?</h5>
@@ -135,6 +127,7 @@ import ButtonSubmit from "./buttons/ButtonSubmit.vue";
 import Input from "./form_elements/Input.vue";
 import RadioButtons from "./form_elements/RadioButtons.vue";
 import SelectDropdown from "./form_elements/SelectDropdown.vue";
+import SelectSearch from "./form_elements/SelectSearch.vue";
 
 const BASE_CHOICES = [
   {
@@ -162,6 +155,7 @@ export default {
     Input,
     RadioButtons,
     SelectDropdown,
+    SelectSearch,
   },
 
   data() {
