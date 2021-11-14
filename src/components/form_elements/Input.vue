@@ -57,3 +57,22 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+input[type="date"] {
+  position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background-position: right center;
+  background-size: auto 75%;
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  height: auto;
+  width: auto;
+}
+</style>
