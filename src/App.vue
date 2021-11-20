@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <Form />
+    <div class="container-md my-5">
+      <Form />
+    </div>
   </div>
 </template>
 
@@ -16,20 +18,6 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  color: #2c3e50;
-  background-color: #fafafa;
-  padding: 24px;
-  box-sizing: border-box;
-}
-
-html,
-body,
-#app {
-  height: 100%;
-}
-
 * {
   box-sizing: border-box;
 }
